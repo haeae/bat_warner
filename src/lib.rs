@@ -27,6 +27,11 @@ mod tests{
     fn test_alert(){
         alert();
     }
+
+    #[test]
+    fn test_charging(){
+        assert_eq!(charging(), false);
+    }
 }
 
 pub fn percentage()-> u32{
@@ -48,13 +53,22 @@ pub fn limit()-> u32{
     let value: u32 = value.trim().parse().unwrap();
     value
 }
-
+pub fn charging() -> bool{
+    let val = Command::new("cat")
+        .arg("/sys/class/power_supply/cw2015-battery/status")
+        .output()
+        .unwrap()
+        .stdout;
+    let val = std::str::from_utf8(&val).expect("failed to parse charging file").trim();
+    if val == "Charging"{
+        true
+    } else {
+        false
+    }
+}
 pub fn alert(){
     let (stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
 
-    //let file = File::open("life.ogg").unwrap();
-    //let file = include_bytes!("../life.ogg");
-    
     for _ in 0..5 {
         let sink = Sink::try_new(&stream_handle).unwrap();
         let source = SineWave::new(440).take_duration(Duration::from_secs_f32(0.5));

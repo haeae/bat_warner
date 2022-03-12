@@ -7,6 +7,8 @@ fn main() {
     let level = percentage();
     if level >= limit(){
         println!("over limit");
+        while charging(){
         alert();
+        }
     }
 }
