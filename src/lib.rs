@@ -38,7 +38,7 @@ mod tests{
 pub fn percentage()-> u32{
     let path = env::var("BAT_FILE").unwrap();
     let value = Command::new("cat")
-        .arg(path)
+        .arg(format!("{path}/capacity"))
         .output()
         .unwrap()
         .stdout;
