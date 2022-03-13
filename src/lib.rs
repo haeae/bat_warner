@@ -1,11 +1,9 @@
-
 use std::process::Command;
 use std::time::Duration;
 use std::{env, thread};
 use rodio::source::SineWave;
 
 use rodio::{Source, Sink};
-
 
 #[cfg(test)]
 mod tests{
@@ -15,6 +13,7 @@ mod tests{
     fn test_per(){
         let value: u32 = 81;
         assert_eq!(value, percentage());
+        //for test uncomment other controll path in percentage()
     }
 
     #[test]
@@ -25,25 +24,26 @@ mod tests{
     
     #[test]
     fn test_alert(){
-        alert();
+        for _ in 0..5{
+        alert()
+        }
     }
 
     #[test]
     fn test_charging(){
-        assert_eq!(charging(), false);
+        assert!(charging());
     }
 }
 
 pub fn percentage()-> u32{
     let value = Command::new("cat")
-        .arg("/home/hannes/Projekte/Pinebook/bat3/battery_percentage")
-        //.arg("/sys/class/power_supply/cw2015-battery/capacity")
+        //.arg("~/bat3/battery")
+        .arg("/sys/class/power_supply/cw2015-battery/capacity")
         .output()
         .unwrap()
         .stdout;
     let value = std::str::from_utf8(&value).expect("error").to_owned();
     let value: u32 = value.trim().parse().unwrap();
-
     println!("{}", &value);
     value
 }
@@ -60,18 +60,14 @@ pub fn charging() -> bool{
         .unwrap()
         .stdout;
     let val = std::str::from_utf8(&val).expect("failed to parse charging file").trim();
-    if val == "Charging"{
-        true
-    } else {
-        false
-    }
+    val == "Charging"
 }
 pub fn alert(){
-    let (stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
+    let (_, stream_handle) = rodio::OutputStream::try_default().unwrap();
 
-        let sink = Sink::try_new(&stream_handle).unwrap();
-        let source = SineWave::new(440).take_duration(Duration::from_secs_f32(0.5));
-        sink.append(source);
-        sink.sleep_until_end();
-        thread::sleep(Duration::from_secs_f32(0.5));
+    let sink = Sink::try_new(&stream_handle).unwrap();
+    let source = SineWave::new(440).take_duration(Duration::from_secs_f32(0.5));
+    sink.append(source);
+    sink.sleep_until_end();
+    thread::sleep(Duration::from_secs_f32(0.5));
 }
