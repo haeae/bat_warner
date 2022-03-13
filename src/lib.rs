@@ -69,11 +69,9 @@ pub fn charging() -> bool{
 pub fn alert(){
     let (stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
 
-    for _ in 0..5 {
         let sink = Sink::try_new(&stream_handle).unwrap();
         let source = SineWave::new(440).take_duration(Duration::from_secs_f32(0.5));
         sink.append(source);
         sink.sleep_until_end();
         thread::sleep(Duration::from_secs_f32(0.5));
-    }
 }
