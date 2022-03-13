@@ -10,7 +10,7 @@ mod tests{
     use super::*;
 
     #[test]
-    fn test_per(){
+    fn test_percentage(){
         let value: u32 = 81;
         assert_eq!(value, percentage());
         //for test uncomment other controll path in percentage()
@@ -36,9 +36,9 @@ mod tests{
 }
 
 pub fn percentage()-> u32{
+    let path = env::var("BAT_FILE").unwrap();
     let value = Command::new("cat")
-        //.arg("~/bat3/battery")
-        .arg("/sys/class/power_supply/cw2015-battery/capacity")
+        .arg(path)
         .output()
         .unwrap()
         .stdout;
