@@ -1,9 +1,11 @@
-use std::process::Command;
+use std::process::{Command, Output};
 use std::time::Duration;
 use std::{env, thread};
-use rodio::source::SineWave;
 
-use rodio::{Source, Sink};
+use std::io::BufReader;
+use std::fs::File;
+use rodio::source::{SineWave, Source};
+use rodio::{Decoder, Sink, OutputStream};
 
 #[cfg(test)]
 mod tests{
@@ -54,14 +56,16 @@ pub fn limit()-> u32{
     value
 }
 pub fn charging() -> bool{
+    let path = env::var("BAT_FILE").unwrap();
     let val = Command::new("cat")
-        .arg("/sys/class/power_supply/cw2015-battery/status")
+        .arg(format!("{path}/status"))
         .output()
         .unwrap()
         .stdout;
     let val = std::str::from_utf8(&val).expect("failed to parse charging file").trim();
     val == "Charging"
 }
+/*
 pub fn alert(){
     let (_, stream_handle) = rodio::OutputStream::try_default().unwrap();
 
@@ -70,4 +74,14 @@ pub fn alert(){
     sink.append(source);
     sink.sleep_until_end();
     thread::sleep(Duration::from_secs_f32(0.5));
+}
+*/
+
+pub fn alert(){
+    let (_stream, stram_handle) = OutputStream::try_default().unwrap();
+    let sink = Sink::try_new(&stram_handle).unwrap();
+    let source = SineWave::new(440).take_duration(Duration::from_secs_f32(1.0));
+    sink.append(source);
+
+    sink.sleep_until_end();
 }
