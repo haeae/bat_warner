@@ -1,11 +1,9 @@
-use std::process::{Command, Output};
+use std::process::Command;
 use std::time::Duration;
 use std::{env, thread};
 
-use std::io::BufReader;
-use std::fs::File;
 use rodio::source::{SineWave, Source};
-use rodio::{Decoder, Sink, OutputStream};
+use rodio::{Sink, OutputStream};
 
 #[cfg(test)]
 mod tests{
@@ -26,7 +24,7 @@ mod tests{
     
     #[test]
     fn test_alert(){
-        for _ in 0..5{
+        for _ in 0..2{
         alert()
         }
     }
