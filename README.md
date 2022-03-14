@@ -71,8 +71,9 @@ WantedBy=default.target
   Mär 12 12:00:00 personalcomputer bat3[823]: 50
   ```
   
-  user: 
-  ``bash
+  user:
+ 
+  ```bash
   $ journalctl --user -u battery.service
   Mär 12 12:00:00 personalcomputer Systemd[431]: Started Unit which alerts if device is charged over 80%.
   Mär 12 12:00:00 personalcomputer bat3[823]: 50
