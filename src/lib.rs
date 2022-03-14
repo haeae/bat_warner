@@ -65,17 +65,6 @@ pub fn charging() -> bool{
     let val = std::str::from_utf8(&val).expect("failed to parse charging file").trim();
     val == "Charging"
 }
-/*
-pub fn alert(){
-    let (_, stream_handle) = rodio::OutputStream::try_default().unwrap();
-
-    let sink = Sink::try_new(&stream_handle).unwrap();
-    let source = SineWave::new(440).take_duration(Duration::from_secs_f32(0.5));
-    sink.append(source);
-    sink.sleep_until_end();
-    thread::sleep(Duration::from_secs_f32(0.5));
-}
-*/
 
 pub fn alert(){
     let (_stream, stram_handle) = OutputStream::try_default().unwrap();
@@ -84,4 +73,5 @@ pub fn alert(){
     sink.append(source);
 
     sink.sleep_until_end();
+    thread::sleep(Duration::from_secs_f32(1.0));
 }
