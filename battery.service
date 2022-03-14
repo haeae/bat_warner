@@ -1,0 +1,11 @@
+[Unit]
+Description=Unit which alerts if device is charged over 80%
+
+[Service]
+Type=simple
+Environment="BAT_LIMIT=80"
+Environment="BAT_FILE=/sys/class/power_supply/cw2015-battery/"
+ExecStart=/usr/bin/bat3
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,10 @@
+[Unit]
+Description="Timer wich runs battery every minute"
+
+[Timer]
+OnUnitActiveSec=60
+Unit=battery.service
+
+[Install]
+WantedBy=default.target
+
