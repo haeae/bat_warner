@@ -34,7 +34,7 @@ mod tests{
         assert!(charging());
     }
 }
-
+/*
 pub fn percentage()-> u32{
     let path = env::var("BAT_FILE").unwrap();
     let value = Command::new("cat")
@@ -46,6 +46,26 @@ pub fn percentage()-> u32{
     let value: u32 = value.trim().parse().unwrap();
     println!("{}", &value);
     value
+}
+*/
+pub fn percentage() -> u32{
+    let mut cache: Vec<f32> = Vec::new();
+    let manager = battery::Manager::new().unwrap();
+    for(_, mbattery) in manager.batteries().unwrap().enumerate(){
+        let battery = mbattery.unwrap();
+        let charge = battery.state_of_charge();
+        let value = charge.value;
+        cache.push(value);
+
+    }
+    let sum: f32 = cache.iter().sum();
+    let len = cache.len() as f32;
+    if len == 0.0{
+        panic!("Divided by 0. Perhaps no battery found.");
+    }
+    let aver: f32 = sum / len;
+    let result = aver * 100.0;
+    result.round() as u32
 }
 
 pub fn limit()-> u32{
