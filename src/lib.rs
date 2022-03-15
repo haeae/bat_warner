@@ -73,6 +73,7 @@ pub fn limit()-> u32{
     let value: u32 = value.trim().parse().unwrap();
     value
 }
+/*
 pub fn charging() -> bool{
     let path = env::var("BAT_FILE").unwrap();
     let val = Command::new("cat")
@@ -82,6 +83,18 @@ pub fn charging() -> bool{
         .stdout;
     let val = std::str::from_utf8(&val).expect("failed to parse charging file").trim();
     val == "Charging"
+}
+*/
+pub fn charging() -> bool {
+    let manager = battery::Manager::new().unwrap();
+    for(_, mbattery) in manager.batteries().unwrap().enumerate(){
+       let battery = mbattery.unwrap();
+       let state = battery.state();
+       if (state == battery::State::Charging){
+           return true;
+       }
+    }
+    false
 }
 
 pub fn alert(){
